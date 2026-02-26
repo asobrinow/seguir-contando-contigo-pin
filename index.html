@@ -302,7 +302,7 @@ document.getElementById('frmDonante').addEventListener('submit', function (e) {
 
   fetch(APPS_SCRIPT_URL, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'text/plain' },
     body: JSON.stringify({
       token:       TOKEN,
       pin:         pin,
