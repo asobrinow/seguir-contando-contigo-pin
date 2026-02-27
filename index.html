@@ -309,10 +309,15 @@ document.getElementById('frmDonante').addEventListener('submit', function (e) {
       municipio:   muniName,
       lugarCodigo: lugarCod,
       lugarNome:   lugarNom
-    })
+    }),
+    redirect: 'follow'
   })
-  .then(r => r.json())
-  .then(data => {
+  .then(r => r.text())
+  .then(text => {
+    console.log('RESPOSTA COMPLETA:', text);
+    const match = text.match(/\{.*\}/s);
+    if (!match) throw new Error('Sen JSON na resposta: ' + text.substring(0, 200));
+    const data = JSON.parse(match[0]);
     if (data.status === 'ok') {
       msgEl.className   = 'msg ok';
       msgEl.textContent = '✓ Datos gardados correctamente. Moitas grazas pola túa solidariedade!';
@@ -322,12 +327,13 @@ document.getElementById('frmDonante').addEventListener('submit', function (e) {
       throw new Error(data.message || 'Erro descoñecido');
     }
   })
-  .catch(() => {
+  .catch(err => {
+    console.log('ERRO DETALLADO:', err.message);
     msgEl.className   = 'msg err';
     msgEl.textContent = '✗ Erro ao enviar os datos. Inténtao de novo ou contacta con ADOS.';
     btnEnv.disabled    = false;
     btnEnv.textContent = 'Enviar';
-  });
+  });  
 });
 </script>
 </body>
